@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { TextInput, Button, useTheme } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
 export const LoginScreen = () => {
+  const navigation = useNavigation(); 
   const theme = useTheme(); // Accede a los colores definidos en theme.js
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
@@ -133,16 +135,10 @@ export const LoginScreen = () => {
 
           {/* Enlace de olvidar contraseña */}
           <TouchableOpacity
-            onPress={() => console.log('Ir a recuperación')}
+            onPress={() => navigation.navigate('ChangePassword')} 
             style={{ marginTop: 10 }}
           >
-            <Text
-              style={{
-                color: theme.colors.primary,
-                textAlign: 'right',
-                fontSize: 13,
-              }}
-            >
+            <Text style={{ color: theme.colors.primary, textAlign: 'right', fontSize: 13 }}>
               ¿Olvidaste tu contraseña?
             </Text>
           </TouchableOpacity>

@@ -4,18 +4,16 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
 import { getTheme } from '../theme/theme';
 
-import { LoginScreen, PruebaScreen } from '../modules/auth/screens';
+import { LoginScreen, PruebaScreen, ChangePasswordScreen } from '../modules/auth/screens';
 
 const Stack = createStackNavigator();
 
 export const AppRoutes = () => {
-  const { status, user } = useSelector((state) => state.auth);
+  const { status } = useSelector((state) => state.auth);
   const { mode } = useSelector((state) => state.theme);
   const theme = getTheme(mode);
 
-  if (status === 'checking') {
-    return null; // puedes poner un SplashScreen aquí
-  }
+  if (status === 'checking') return null;
 
   return (
     <NavigationContainer theme={theme}>
@@ -24,12 +22,14 @@ export const AppRoutes = () => {
         screenOptions={{ headerShown: false }}
       >
         {status !== 'authenticated' ? (
-          <Stack.Screen name="Login" component={LoginScreen} />
+          <>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            {/* NUEVA RUTA PARA CAMBIAR CONTRASEÑA */}
+            <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+          </>
         ) : (
           <Stack.Screen name="Drawer">
-            {() => {
-              return <PruebaScreen />;
-            }}
+            {() => <PruebaScreen />}
           </Stack.Screen>
         )}
       </Stack.Navigator>
