@@ -2,9 +2,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FirebaseAuth } from "../../modules/auth/firebase/config";
-import { login, logout } from "../../store/auth";
-import { useUsersStore } from "../";
-import { checkingCredentials } from "../../store";
+import { login, logout, checkingCredentials } from "../../store";
+import { useUsersStore } from "./";
 
 export const useCheckAuth = () => {
   const { status } = useSelector(state => state.auth);
@@ -22,7 +21,7 @@ export const useCheckAuth = () => {
         return;
       }
 
-      if (data.role === "Personal Externo" || data.role === "Almacenero" || data.role === "Transportista") {
+      if (data.role === "Administrador" || data.role === "Cliente" || data.role === "Almacenero") {
         dispatch(logout());
         return false;
       }

@@ -1,14 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signInWithPopup,
   GoogleAuthProvider,
   signOut,
   updatePassword,
-  getAuth,
-  verifyPasswordResetCode,
-  confirmPasswordReset,
 } from 'firebase/auth';
 import { FirebaseAuth } from '../../modules/auth/firebase/config';
 import { 
@@ -17,13 +12,9 @@ import {
   logout,
   showSnackbar,
   authenticated,
-  sendingResetEmail,
-  resetEmailSent,
-  changingPassword
 } from '../../store';
-import { useUsersStore } from '../../hooks';
+import { useUsersStore } from '../user/use-users-store';
 import { userApi } from '../../api';
-import { createRequestPasswordResetModel } from '../../shared/models'
 import { getAuthConfig } from '../../shared/utils';
 
 const googleProvider = new GoogleAuthProvider();
@@ -45,7 +36,7 @@ export const useAuthStore = () => {
 
   const { token } = useSelector((state) => state.auth);
 
-  const { startCreateUser, findUserByEmail } = useUsersStore();
+  const { findUserByEmail } = useUsersStore();
 
   const openSnackbar = (message) => dispatch(showSnackbar({ message }));
 
@@ -85,6 +76,7 @@ export const useAuthStore = () => {
       }));
       return !needsPassword;
     } catch (error) {
+      console.log(error);
       dispatch(logout());
       if (error.code === "auth/invalid-credential") {
         openSnackbar("Credenciales incorrectas.");
