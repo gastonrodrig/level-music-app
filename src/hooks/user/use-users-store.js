@@ -16,13 +16,11 @@ export const useUsersStore = () => {
   const findUserByEmail = async (email) => {
     try {
       const { data } = await userApi.get(`find/${email}`);
-      console.log(data)
       if (!data) {
         return { ok: false, data: null };
       }
       return { ok: true, data };
     } catch (error) {
-      console.log(error);
       return false;
     }
   }

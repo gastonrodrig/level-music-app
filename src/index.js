@@ -3,19 +3,15 @@ import { Provider } from 'react-redux';
 import { config } from './store';
 import { AppTheme } from './theme/app-theme';
 import { AppRoutes } from './routes/app-routes';
-import { useCheckAuth } from './hooks/auth';
-
-function AppContent() {
-  useCheckAuth();
-  return <AppRoutes />;
-}
+import { GlobalSnackbar } from './shared/ui';
 
 export default function App() {
   return (
     <StrictMode>
       <Provider store={config}>
         <AppTheme>
-          <AppContent />
+          <AppRoutes />
+          <GlobalSnackbar /> 
         </AppTheme>
       </Provider>
     </StrictMode>

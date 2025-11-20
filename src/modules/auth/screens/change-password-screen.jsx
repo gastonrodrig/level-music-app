@@ -1,195 +1,85 @@
-import React, { useState } from 'react';
-import { View, Text, Image, ScrollView } from 'react-native';
-import { TextInput, Button, useTheme } from 'react-native-paper';
+import { useForm } from 'react-hook-form';
+import { useAuthStore } from '../../../hooks';
+import { FormInputText } from '../../../shared/ui';
+import { AuthLayout } from '../layout/auth-layout';
+import { Button } from 'react-native-paper';
+import { Ionicons } from '@expo/vector-icons';
 
 export const ChangePasswordScreen = () => {
-  const theme = useTheme();
-  const [oldPass, setOldPass] = useState('');
-  const [newPass, setNewPass] = useState('');
-  const [confirmPass, setConfirmPass] = useState('');
-  const [showOld, setShowOld] = useState(false);
-  const [showNew, setShowNew] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+  const { onLogout, startChangePasswordFirstLogin } = useAuthStore();
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      password: '',
+      confirmPassword: '',
+    },
+  });
+
+  const onSubmit = async (data) => {
+    await startChangePasswordFirstLogin(data);
+  };
+
+  const onCloseSession = async () => {
+    await onLogout();
+  };
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        flexGrow: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: theme.colors.background,
-        paddingVertical: 40,
-      }}
+    <AuthLayout
+      logoUri="https://i.postimg.cc/N0rDzYsx/seguridad.png"
+      title="Cambio de Contraseña Requerido"
+      subtitle="Por seguridad, debes cambiar tu contraseña temporal"
+      onSubmit={handleSubmit(onSubmit)}
+      onLogout={onCloseSession}
+      footerText="Esta contraseña será utilizada para futuros inicios de sesión."
     >
-      {/* Logo */}
-      <Image
-        source={require('../../../../assets/logo.png')}
-        style={{
-          width: 140,
-          height: 140,
-          resizeMode: 'contain',
-          marginBottom: 16,
+      {/* Contenido de la Card */}
+      <FormInputText
+        name="password"
+        control={control}
+        label="Nueva Contraseña"
+        placeholder={"••••••••"}
+        rules={{
+          required: 'Este campo es obligatorio',
         }}
+        error={errors.password}
+        isPasswordInput={true}
+      />
+      <FormInputText
+        name="confirmPassword"
+        control={control}
+        label="Confirmar Nueva Contraseña"
+        placeholder={"••••••••"}
+        rules={{
+          required: 'Este campo es obligatorio',
+        }}
+        error={errors.confirmPassword}
+        isPasswordInput={true}
       />
 
-      {/* Títulos */}
-      <Text
+      <Button
+        mode="contained"
+        onPress={onSubmit}
         style={{
-          fontSize: 18,
-          fontWeight: '700',
-          color: theme.colors.text,
-          textAlign: 'center',
+          borderRadius: 10,
+          marginTop: 6,
         }}
-      >
-        LEVEL MUSIC CORP
-      </Text>
-
-      <Text
-        style={{
-          fontSize: 14,
-          color: '#777',
-          marginBottom: 28,
-          textAlign: 'center',
-        }}
+        buttonColor={'#e38532ff'}
+        textColor="#fff"
       >
         Cambiar Contraseña
-      </Text>
+      </Button>
 
-      {/* Contenedor blanco */}
-      <View style={{ marginHorizontal: 20, width: '85%' }}>
-        <View
-          style={{
-            width: '100%',
-            borderWidth: 1,
-            borderColor: theme.colors.outline,
-            borderRadius: 12,
-            justifyContent: 'center',
-            marginBottom: 40,
-            backgroundColor: theme.colors.tableBackgroundColor,
-            paddingHorizontal: 18,
-            paddingVertical: 25,
-            shadowColor: '#000',
-            shadowOpacity: 0.1,
-            shadowRadius: 8,
-            shadowOffset: { width: 0, height: 4 },
-            elevation: 5,
-          }}
-        >
-          {/* Contraseña actual */}
-          <Text
-            style={{
-              fontSize: 13,
-              color: theme.colors.text,
-              marginBottom: 6,
-            }}
-          >
-            Contraseña actual
-          </Text>
-          <TextInput
-            mode="outlined"
-            value={oldPass}
-            onChangeText={setOldPass}
-            placeholder="••••••••"
-            secureTextEntry={!showOld}
-            outlineColor={theme.colors.outline}
-            activeOutlineColor={theme.colors.primary}
-            style={{ backgroundColor: theme.colors.surface, marginBottom: 14 }}
-            outlineStyle={{ borderRadius: 8 }}
-            contentStyle={{ fontSize: 14 }}
-            right={
-              <TextInput.Icon
-                icon={showOld ? 'eye-off' : 'eye'}
-                onPress={() => setShowOld(!showOld)}
-              />
-            }
-          />
-
-          {/* Nueva contraseña */}
-          <Text
-            style={{
-              fontSize: 13,
-              color: theme.colors.text,
-              marginBottom: 6,
-            }}
-          >
-            Nueva contraseña
-          </Text>
-          <TextInput
-            mode="outlined"
-            value={newPass}
-            onChangeText={setNewPass}
-            placeholder="••••••••"
-            secureTextEntry={!showNew}
-            outlineColor={theme.colors.outline}
-            activeOutlineColor={theme.colors.primary}
-            style={{ backgroundColor: theme.colors.surface, marginBottom: 14 }}
-            outlineStyle={{ borderRadius: 8 }}
-            contentStyle={{ fontSize: 14 }}
-            right={
-              <TextInput.Icon
-                icon={showNew ? 'eye-off' : 'eye'}
-                onPress={() => setShowNew(!showNew)}
-              />
-            }
-          />
-
-          {/* Confirmar contraseña */}
-          <Text
-            style={{
-              fontSize: 13,
-              color: theme.colors.text,
-              marginBottom: 6,
-            }}
-          >
-            Confirmar nueva contraseña
-          </Text>
-          <TextInput
-            mode="outlined"
-            value={confirmPass}
-            onChangeText={setConfirmPass}
-            placeholder="••••••••"
-            secureTextEntry={!showConfirm}
-            outlineColor={theme.colors.outline}
-            activeOutlineColor={theme.colors.primary}
-            style={{ backgroundColor: theme.colors.surface }}
-            outlineStyle={{ borderRadius: 8 }}
-            contentStyle={{ fontSize: 14 }}
-            right={
-              <TextInput.Icon
-                icon={showConfirm ? 'eye-off' : 'eye'}
-                onPress={() => setShowConfirm(!showConfirm)}
-              />
-            }
-          />
-
-          {/* Botón de guardar */}
-          <Button
-            mode="contained"
-            onPress={() => console.log('Cambiar contraseña')}
-            style={{
-              borderRadius: 10,
-              marginTop: 25,
-              paddingVertical: 5,
-            }}
-            buttonColor={theme.colors.primary}
-            textColor="#fff"
-          >
-            Guardar nueva contraseña
-          </Button>
-        </View>
-      </View>
-
-      {/* Footer */}
-      <Text
+      <Button
+        icon={() => <Ionicons name="exit" size={20} color={"#333"} />}
+        onPress={onLogout}
         style={{
-          textAlign: 'center',
-          color: '#555',
-          fontSize: 12,
-          width: '80%',
+          borderRadius: 10,
+          marginTop: 5,
+          paddingVertical: 5,
         }}
+        textColor={"#333"}
       >
-        Acceso exclusivo para empleados de Level Music Corp
-      </Text>
-    </ScrollView>
+        Cerrar sesión
+      </Button>
+    </AuthLayout>
   );
 };

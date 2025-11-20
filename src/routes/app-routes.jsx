@@ -1,39 +1,54 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { useSelector } from 'react-redux';
-import { getTheme } from '../theme/theme';
-
-import { LoginScreen, ChangePasswordScreen, TestConnectionScreen } from '../modules/auth/screens';
-import { CarrierDrawer } from '../modules/carrier/router/drawer';
-import { WorkerDrawer } from '../modules/worker/router/drawer';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { useSelector } from "react-redux";
+import { getTheme } from "../theme/theme";
+import {
+  LoginScreen,
+  PruebaScreen,
+  ChangePasswordScreen,
+} from "../modules/auth/screens";
+import {
+  LoadingScreen
+} from '../shared/ui'
+import { useCheckAuth } from "../hooks";
 
 const Stack = createStackNavigator();
 
 export const AppRoutes = () => {
-  const { status, role } = useSelector((state) => state.auth);
+  const { status } = useSelector((state) => state.auth);
   const { mode } = useSelector((state) => state.theme);
   const theme = getTheme(mode);
 
-  if (status === 'checking') return null;
+  useCheckAuth();
+
+  console.log(status);
+
+  // Mostrar pantalla de carga si el estado es "checking"
+  if (status === "checking") {
+    return <LoadingScreen />;
+  }
 
   return (
     <NavigationContainer theme={theme}>
       <Stack.Navigator
-        initialRouteName="TestConnection"
+        initialRouteName={
+          status === "authenticated"
+            ? "Drawer"
+            : status === "first-login-password"
+            ? "ChangePassword"
+            : "Login"
+        }
         screenOptions={{ headerShown: false }}
       >
-        {status === 'authenticated' ? (
+        {status === "not-authenticated" ? (
+          <Stack.Screen name="Login" component={LoginScreen} />
+        ) : status === "first-login-password" ? (
+          <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+        ) : status === "authenticated" ? (
           <Stack.Screen name="Drawer">
-            {() => role === 'Transportista' ? <CarrierDrawer /> : <WorkerDrawer />}
+            {() => <PruebaScreen />}
           </Stack.Screen>
-        ) : (
-          <>
-            <Stack.Screen name="TestConnection" component={TestConnectionScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
-          </>
-        )}
+        ) : null}
       </Stack.Navigator>
     </NavigationContainer>
   );

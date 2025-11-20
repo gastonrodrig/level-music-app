@@ -3,9 +3,9 @@ import { View, Text, StyleSheet } from 'react-native';
 
 export const PruebaScreen = () => {
   return (
-<View>
-  <Text>Hola, ahora sí funciono.dasdada</Text>
-</View>
+    <View>
+      <Text>Hola, ahora sí funciono.dasdada</Text>
+    </View>
   )
   const styles = StyleSheet.create({
   container: {

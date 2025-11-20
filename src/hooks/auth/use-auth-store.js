@@ -32,9 +32,8 @@ export const useAuthStore = () => {
     photoURL, 
     role,
     extra_data,
+    token
   } = useSelector((state) => state.auth);
-
-  const { token } = useSelector((state) => state.auth);
 
   const { findUserByEmail } = useUsersStore();
 
@@ -44,16 +43,21 @@ export const useAuthStore = () => {
     try {
       dispatch(checkingCredentials());
       const { user } = await signInWithEmailAndPassword(FirebaseAuth, email, password);
-      const { data } = await findUserByEmail(user.providerData[0].email); 
+      const { data } = await findUserByEmail(user.email); 
 
       if (data.status === "Inactivo") {
+        openSnackbar("Usuario inactivo. Contacta al administrador.");
         dispatch(logout());
         return false;
       }
 
-      if (data.role === "Personal Externo" || data.role === "Almacenero" || data.role === "Transportista") {
-        dispatch(logout());
+      if (
+        data.role === "Administrador" ||
+        data.role === "Cliente" ||
+        data.role === "Almacenero"
+      ) {
         openSnackbar("Este rol no tiene permitido iniciar sesión en esta aplicación.");
+        dispatch(logout());
         return false;
       }
       
@@ -76,7 +80,6 @@ export const useAuthStore = () => {
       }));
       return !needsPassword;
     } catch (error) {
-      console.log(error);
       dispatch(logout());
       if (error.code === "auth/invalid-credential") {
         openSnackbar("Credenciales incorrectas.");
@@ -127,6 +130,7 @@ export const useAuthStore = () => {
     photoURL, 
     role,
     extra_data,
+    
     // actions
     startLogin,
     onLogout,
