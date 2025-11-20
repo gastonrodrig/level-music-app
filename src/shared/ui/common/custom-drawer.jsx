@@ -15,7 +15,7 @@ import { useAuthStore, useUsersStore } from "../../../hooks";
 
 export const CustomDrawer = (props) => {
   const { onLogout } = useAuthStore();
-  const { firstName, lastName, role, photoURL } = useUsersStore();
+  const { firstName, lastName, workerTypeName, photoURL } = useUsersStore();
   const insets = useSafeAreaInsets();
 
   const fullName = `${firstName} ${lastName}`;
@@ -73,7 +73,7 @@ export const CustomDrawer = (props) => {
               </Text>
 
               <Text style={{ color: "white", fontSize: 14 }}>
-                {role}
+                {workerTypeName}
               </Text>
             </View>
           </View>

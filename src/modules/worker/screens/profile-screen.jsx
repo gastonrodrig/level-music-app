@@ -1,4 +1,3 @@
-import React from "react";
 import { View, Image, ScrollView } from "react-native";
 import { Text } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
@@ -13,12 +12,11 @@ export const ProfileScreen = () => {
     firstName,
     lastName,
     email,
-    role,
-    userStatus,
     documentNumber,
     phone,
     createdAt,
     updatedAt,
+    workerTypeName,
   } = authState;
 
   return (
@@ -71,7 +69,7 @@ export const ProfileScreen = () => {
             marginTop: 2,
           }}
         >
-          {role || "Sonidista"}
+          {workerTypeName}
         </Text>
       </LinearGradient>
 

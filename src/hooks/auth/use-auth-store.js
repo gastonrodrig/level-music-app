@@ -76,6 +76,9 @@ export const useAuthStore = () => {
         userStatus: data.status,
         photoURL: data.profile_picture,
         token: user.accessToken,
+        updatedAt: data.updated_at,
+        createdAt: data.created_at,
+        workerTypeName: data.worker_type_name,
         isExtraDataCompleted: data.is_extra_data_completed
       }));
       return !needsPassword;
