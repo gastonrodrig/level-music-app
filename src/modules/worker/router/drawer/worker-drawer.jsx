@@ -1,44 +1,33 @@
-import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { Ionicons } from '@expo/vector-icons';
 import { HomeScreen, ProfileScreen } from '../../screens';
-import { MaterialIcons } from '@expo/vector-icons';
-import { CustomDrawerContent } from './custom-drawer-content';
+import { CustomDrawer } from '../../../../shared/ui';
 
 const Drawer = createDrawerNavigator();
 
 export const WorkerDrawer = () => {
   return (
-    <Drawer.Navigator
-      drawerContent={(props) => <CustomDrawerContent {...props} />}
+    <Drawer.Navigator 
+      drawerContent={props => <CustomDrawer{...props} />} 
+      initialRouteName="Home"
       screenOptions={{
-        headerShown: true,
-        drawerStyle: {
-          width: 280,
-        },
-        drawerActiveTintColor: '#6200ee',
-        drawerInactiveTintColor: '#666',
+        drawerLabelStyle: { fontSize: 16 }, 
       }}
     >
-      <Drawer.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          title: 'Inicio',
-          drawerIcon: ({ color, size }) => (
-            <MaterialIcons name="home" size={size} color={color} />
-          ),
+      <Drawer.Screen 
+        name="Home" 
+        component={HomeScreen} 
+        options= {{
+          drawerIcon: () => <Ionicons name="home-outline" size={22} color="#e38532ff" />
         }}
       />
-      <Drawer.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          title: 'Mi Perfil',
-          drawerIcon: ({ color, size }) => (
-            <MaterialIcons name="person" size={size} color={color} />
-          ),
+      <Drawer.Screen 
+        name="Profile" 
+        component={ProfileScreen} 
+        options= {{
+          drawerIcon: () => <Ionicons name="person-circle-outline" size={22} color="#e38532ff" />
         }}
       />
     </Drawer.Navigator>
   );
-};
+}

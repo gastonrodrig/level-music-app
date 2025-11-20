@@ -1,2 +1,1 @@
-export { WorkerDrawer } from './worker-drawer';
-export { CustomDrawerContent } from './custom-drawer-content';
+export * from './worker-drawer';

@@ -10,7 +10,9 @@ export const useUsersStore = () => {
     phone,
     documentType,
     documentNumber,
-    photoURL
+    photoURL,
+    updatedAt,
+    createdAt
   } = useSelector((state) => state.auth);
 
   const findUserByEmail = async (email) => {
@@ -35,6 +37,8 @@ export const useUsersStore = () => {
     documentType,
     documentNumber,
     photoURL,
+    updatedAt,
+    createdAt,
 
     // actions
     findUserByEmail

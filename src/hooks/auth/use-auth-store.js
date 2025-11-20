@@ -101,6 +101,7 @@ export const useAuthStore = () => {
       openSnackbar("Las contraseñas no coinciden.");
       return false;
     }
+    dispatch(checkingCredentials());
 
     try {
       const user = FirebaseAuth.currentUser;

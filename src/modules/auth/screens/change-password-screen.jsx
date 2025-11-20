@@ -2,12 +2,12 @@ import { useForm } from 'react-hook-form';
 import { useAuthStore } from '../../../hooks';
 import { FormInputText } from '../../../shared/ui';
 import { AuthLayout } from '../layout/auth-layout';
-import { Button } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 
 export const ChangePasswordScreen = () => {
   const { onLogout, startChangePasswordFirstLogin } = useAuthStore();
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const { control, handleSubmit, formState: { errors }, setError } = useForm({
     defaultValues: {
       password: '',
       confirmPassword: '',
@@ -15,6 +15,16 @@ export const ChangePasswordScreen = () => {
   });
 
   const onSubmit = async (data) => {
+    const { password, confirmPassword } = data;
+
+    if (password !== confirmPassword) {
+      setError('confirmPassword', {
+        type: 'manual',
+        message: 'Las contraseñas no coinciden',
+      });
+      return;
+    }
+
     await startChangePasswordFirstLogin(data);
   };
 
@@ -31,7 +41,6 @@ export const ChangePasswordScreen = () => {
       onLogout={onCloseSession}
       footerText="Esta contraseña será utilizada para futuros inicios de sesión."
     >
-      {/* Contenido de la Card */}
       <FormInputText
         name="password"
         control={control}
@@ -43,6 +52,7 @@ export const ChangePasswordScreen = () => {
         error={errors.password}
         isPasswordInput={true}
       />
+
       <FormInputText
         name="confirmPassword"
         control={control}
@@ -57,7 +67,7 @@ export const ChangePasswordScreen = () => {
 
       <Button
         mode="contained"
-        onPress={onSubmit}
+        onPress={handleSubmit(onSubmit)}
         style={{
           borderRadius: 10,
           marginTop: 6,

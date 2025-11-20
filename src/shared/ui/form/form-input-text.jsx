@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { TextInput, View, Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { Ionicons } from '@expo/vector-icons';
-import { Controller } from 'react-hook-form'; // Asegúrate de importar Controller
+import { Controller } from 'react-hook-form';
 
 export const FormInputText = ({
   name,
@@ -29,16 +29,15 @@ export const FormInputText = ({
         {label}
       </Text>
 
-      {/* Usamos Controller para gestionar el valor del TextInput */}
       <Controller
         control={control}
         name={name}
         rules={rules}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            value={value} // Aquí se asigna el valor desde React Hook Form
-            onBlur={onBlur} // onBlur se gestiona desde React Hook Form
-            onChangeText={onChange} // onChangeText se gestiona desde React Hook Form
+            value={value}
+            onBlur={onBlur}
+            onChangeText={onChange}
             secureTextEntry={isPasswordInput && !showPassword}
             placeholder={placeholder}
             style={{
@@ -48,13 +47,14 @@ export const FormInputText = ({
               height: 40,
               paddingVertical: 6,
               paddingHorizontal: 10,
-              borderWidth: 0, // Sin borde
+              borderWidth: 0,
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 1 },
               shadowOpacity: 0.1,
               shadowRadius: 2,
             }}
-            selectionColor={'#e38532ff'} // Color del cursor
+            placeholderTextColor="#aaa"
+            selectionColor={'#e38532ff'}
           />
         )}
       />
@@ -72,10 +72,9 @@ export const FormInputText = ({
         </TouchableOpacity>
       )}
 
-      {/* Mostrar error si está presente */}
       {error && (
         <Text style={{ color: '#f44336', marginTop: 4 }}>
-          {error.message} {/* Muestra el mensaje del error */}
+          {error.message}
         </Text>
       )}
     </View>
@@ -84,10 +83,10 @@ export const FormInputText = ({
 
 FormInputText.propTypes = {
   name: PropTypes.string.isRequired,
-  control: PropTypes.object.isRequired, // Asegúrate de pasar el control desde React Hook Form
+  control: PropTypes.object.isRequired,
   label: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
-  error: PropTypes.object, // El error debe ser un objeto que contiene el mensaje
+  error: PropTypes.object,
   rules: PropTypes.object,
   isPasswordInput: PropTypes.bool,
 };

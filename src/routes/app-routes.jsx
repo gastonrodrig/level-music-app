@@ -4,13 +4,13 @@ import { useSelector } from "react-redux";
 import { getTheme } from "../theme/theme";
 import {
   LoginScreen,
-  PruebaScreen,
   ChangePasswordScreen,
 } from "../modules/auth/screens";
 import {
   LoadingScreen
 } from '../shared/ui'
 import { useCheckAuth } from "../hooks";
+import { WorkerDrawer } from "../modules/worker/router/drawer";
 
 const Stack = createStackNavigator();
 
@@ -46,7 +46,7 @@ export const AppRoutes = () => {
           <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
         ) : status === "authenticated" ? (
           <Stack.Screen name="Drawer">
-            {() => <PruebaScreen />}
+            {() => <WorkerDrawer />}
           </Stack.Screen>
         ) : null}
       </Stack.Navigator>

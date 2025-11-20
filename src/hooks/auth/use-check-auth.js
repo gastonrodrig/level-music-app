@@ -49,6 +49,8 @@ export const useCheckAuth = () => {
           userStatus: data.status, // Activo, Inactivo
           photoURL: data.profile_picture || null,
           token: user.accessToken,
+          updatedAt: data.updated_at,
+          createdAt: data.created_at,
           isExtraDataCompleted: data.is_extra_data_completed,
         })
       );

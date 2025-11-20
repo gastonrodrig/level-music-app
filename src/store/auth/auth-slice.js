@@ -19,6 +19,8 @@ export const authSlice = createSlice({
     userStatus: null, // Activo, Inactivo
     photoURL: null, 
     token: null,
+    updatedAt: null,
+    createdAt: null
   },
   reducers: {
     login: (state, { payload }) => {
@@ -40,6 +42,8 @@ export const authSlice = createSlice({
       state.userStatus = payload.userStatus;
       state.photoURL = payload.photoURL; 
       state.token = payload.token;
+      state.updatedAt = payload.updatedAt;
+      state.createdAt = payload.createdAt;
       state.status = payload.needsPasswordChange ? "first-login-password" : "authenticated";
     },
     logout: (state) => {
@@ -57,6 +61,8 @@ export const authSlice = createSlice({
       state.userStatus = null;
       state.photoURL = null;
       state.token = null;
+      state.updatedAt = null;
+      state.createdAt = null;
     },
     checkingCredentials: (state) => {
       state.status = 'checking';
@@ -73,14 +79,6 @@ export const authSlice = createSlice({
     },
     changingPassword: (state) => {
       state.status = 'changing-password';
-    },
-    setWorkerData: (state, { payload }) => {
-      state.firstName = payload.firstName;
-      state.lastName = payload.lastName;
-      state.phone = payload.phone;
-      state.documentType = payload.documentType;
-      state.documentNumber = payload.documentNumber;
-      state.needsPasswordChange = false;
     }
   }
 });
@@ -93,5 +91,4 @@ export const {
   sendingResetEmail,
   resetEmailSent,
   changingPassword,
-  setWorkerData
 } = authSlice.actions;

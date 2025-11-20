@@ -1,4 +1,4 @@
-import { ScrollView, View, Text, Button, Image } from 'react-native';
+import { ScrollView, View, Text, Image } from 'react-native';
 import { Card, useTheme } from 'react-native-paper';
 
 export const AuthLayout = ({
