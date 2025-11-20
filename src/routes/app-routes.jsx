@@ -4,12 +4,14 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
 import { getTheme } from '../theme/theme';
 
-import { LoginScreen, PruebaScreen, ChangePasswordScreen } from '../modules/auth/screens';
+import { LoginScreen, ChangePasswordScreen, TestConnectionScreen } from '../modules/auth/screens';
+import { CarrierDrawer } from '../modules/carrier/router/drawer';
+import { WorkerDrawer } from '../modules/worker/router/drawer';
 
 const Stack = createStackNavigator();
 
 export const AppRoutes = () => {
-  const { status } = useSelector((state) => state.auth);
+  const { status, role } = useSelector((state) => state.auth);
   const { mode } = useSelector((state) => state.theme);
   const theme = getTheme(mode);
 
@@ -18,19 +20,19 @@ export const AppRoutes = () => {
   return (
     <NavigationContainer theme={theme}>
       <Stack.Navigator
-        initialRouteName={status === 'authenticated' ? 'Drawer' : 'Login'}
+        initialRouteName="TestConnection"
         screenOptions={{ headerShown: false }}
       >
-        {status !== 'authenticated' ? (
+        {status === 'authenticated' ? (
+          <Stack.Screen name="Drawer">
+            {() => role === 'Transportista' ? <CarrierDrawer /> : <WorkerDrawer />}
+          </Stack.Screen>
+        ) : (
           <>
+            <Stack.Screen name="TestConnection" component={TestConnectionScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
-            {/* NUEVA RUTA PARA CAMBIAR CONTRASEÑA */}
             <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
           </>
-        ) : (
-          <Stack.Screen name="Drawer">
-            {() => <PruebaScreen />}
-          </Stack.Screen>
         )}
       </Stack.Navigator>
     </NavigationContainer>

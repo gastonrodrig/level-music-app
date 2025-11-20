@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FirebaseAuth } from "../../modules/auth/firebase/config";
 import { login, logout, checkingCredentials } from "../../store";
-import { useUsersStore } from "./";
+import { useUsersStore } from "../user";
 
 export const useCheckAuth = () => {
   const { status } = useSelector(state => state.auth);
@@ -13,8 +13,11 @@ export const useCheckAuth = () => {
   useEffect(() => {
     dispatch(checkingCredentials());
     const unsubscribe = onAuthStateChanged(FirebaseAuth, async (user) => {
+      console.log("Auth State Changed - User:", user.email);
       if (!user) return dispatch(logout());
-      const { data } = await findUserByEmail(user.providerData[0].email);
+      const resp = await findUserByEmail(user.providerData[0].email);
+
+      console.log("Auth State Changed - User Data:", resp);
       
       if (data?.status === "Inactivo") {
         dispatch(logout());

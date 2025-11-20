@@ -1,1 +1,3 @@
-export const baseURL = process.env.BASE_URL;
+import { BASE_URL } from "@env";
+
+export const baseURL = BASE_URL;

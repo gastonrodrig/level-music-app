@@ -1,6 +1,8 @@
-import axios from 'axios';
-import { baseURL } from '../../shared/helpers';
+import { apiClient } from '../../shared/utils/api-client';
 
-export const userApi = axios.create({
-  baseURL: `${baseURL}/user`,
-});
+export const userApi = {
+  get: (url, config) => apiClient.get(`/user/${url}`, config),
+  post: (url, data, config) => apiClient.post(`/user/${url}`, data, config),
+  put: (url, data, config) => apiClient.put(`/user/${url}`, data, config),
+  delete: (url, config) => apiClient.delete(`/user/${url}`, config),
+};

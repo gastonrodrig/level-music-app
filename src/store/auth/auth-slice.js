@@ -74,19 +74,13 @@ export const authSlice = createSlice({
     changingPassword: (state) => {
       state.status = 'changing-password';
     },
-    setClientData: (state, { payload }) => {
+    setWorkerData: (state, { payload }) => {
       state.firstName = payload.firstName;
       state.lastName = payload.lastName;
       state.phone = payload.phone;
       state.documentType = payload.documentType;
       state.documentNumber = payload.documentNumber;
       state.needsPasswordChange = false;
-    },
-    setClientProfile: (state, { payload }) => {
-      state.photoURL = payload.photoURL;
-    },
-    removeClientProfile: (state) => {
-      state.photoURL = null;
     }
   }
 });
@@ -99,7 +93,5 @@ export const {
   sendingResetEmail,
   resetEmailSent,
   changingPassword,
-  setClientData,
-  setClientProfile,
-  removeClientProfile
+  setWorkerData
 } = authSlice.actions;
