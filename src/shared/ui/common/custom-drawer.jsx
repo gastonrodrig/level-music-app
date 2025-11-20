@@ -5,57 +5,51 @@ import {
 import {
   View,
   Text,
-  ImageBackground,
   TouchableOpacity,
   Image,
 } from "react-native";
-import { useState } from "react";
-import { Switch } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
-import { useAuthStore, useUsersStore } from "../../../hooks"; 
+import { LinearGradient } from "expo-linear-gradient";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useAuthStore, useUsersStore } from "../../../hooks";
 
 export const CustomDrawer = (props) => {
-  const { onLogout } = useAuthStore(); 
-  const { firstName, lastName, role, photoURL, updatedAt, createdAt } = useUsersStore(); 
-  const [isSwitchOn, setIsSwitchOn] = useState(false);
+  const { onLogout } = useAuthStore();
+  const { firstName, lastName, role, photoURL } = useUsersStore();
+  const insets = useSafeAreaInsets();
 
-  const onToggleSwitch = () => {
-    setIsSwitchOn(!isSwitchOn);
-  };
+  const fullName = `${firstName} ${lastName}`;
 
   const handleLogout = async () => {
     await onLogout();
   };
 
-  const fullName = `${firstName} ${lastName}`;
-
   return (
-    <View style={{ flex: 1 }}>
-      <DrawerContentScrollView {...props}>
-        <ImageBackground
-          style={{
-            margin: 0,
-            paddingStart: 10,
-            paddingBottom: 10,
-            backgroundColor: "#e38532", // Ajusta el color de fondo
-            borderBottomLeftRadius: 15,
-            borderBottomRightRadius: 15,
+    <View style={{ flex: 1, backgroundColor: "#ffffff"}}>
+      <DrawerContentScrollView
+        {...props}
+        contentContainerStyle={{ paddingTop: 0, paddingHorizontal: 0}}
+        style= {{ paddingHorizontal: 0 }}
+      >
+        {/* HEADER NARANJA CON DEGRADADO */}
+        <LinearGradient
+          colors={["#d86a20", "#f8ad4f"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={{ 
+            paddingTop: insets.top + 16,
+            paddingBottom: 20,
+            paddingHorizontal: 16,
+            marginHorizontal: -12,
+            borderRadius: 3,
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 10,
-            }}
-          >
-            {/* Foto de perfil del usuario */}
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image
               style={{
-                marginBottom: 10,
-                height: 80,
-                width: 80,
-                borderRadius: 40,
+                height: 75,
+                width: 75,
+                borderRadius: 37.5,
                 borderWidth: 3,
                 borderColor: "#fff",
               }}
@@ -63,42 +57,51 @@ export const CustomDrawer = (props) => {
                 uri:
                   photoURL ||
                   "https://i.postimg.cc/C5Kd3m7W/user-profile-light.png",
-              }} // Usa la foto del usuario o una predeterminada
+              }}
             />
+
             <View style={{ marginLeft: 15 }}>
               <Text
-                style={{ color: "white", fontWeight: "bold", fontSize: 18 }}
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: 18,
+                }}
+                numberOfLines={1}
               >
-                {fullName || "Nombre de Usuario"}{" "}
-                {/* Muestra el nombre completo del usuario */}
+                {fullName}
               </Text>
+
               <Text style={{ color: "white", fontSize: 14 }}>
-                {role || "Trabajador"} {/* Muestra el rol del usuario */}
-                {updatedAt} - {createdAt}
+                {role}
               </Text>
-              <Text style={{ color: "white", fontSize: 14, marginTop: 10 }}>
-                {isSwitchOn ? "Tema: Claro" : "Tema: Oscuro"}
-              </Text>
-              <Switch
-                color="#fff"
-                value={isSwitchOn}
-                onValueChange={onToggleSwitch}
-              />
             </View>
           </View>
-        </ImageBackground>
+        </LinearGradient>
 
-        <View style={{ paddingBottom: 5 }}>
+        {/* RESTO DEL DRAWER BLANCO */}
+        <View
+          style={{
+            backgroundColor: "#ffffff",
+            paddingTop: 10,
+            paddingHorizontal: 10,
+            flexGrow: 1,
+          }}
+        >
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
 
+      {/* BOTÓN CERRAR SESIÓN */}
       <View
         style={{
-          marginBottom: 15,
-          padding: 20,
+          backgroundColor: "#ffffff",
+          marginBottom: 70,
+          paddingHorizontal: 20,
           borderTopWidth: 1,
-          borderTopColor: "#ccc",
+          paddingTop: 12,
+          borderTopWidth: 1.2,
+          borderTopColor: "#e2e2e2",
         }}
       >
         <TouchableOpacity onPress={handleLogout}>
@@ -106,10 +109,10 @@ export const CustomDrawer = (props) => {
             <Ionicons
               name="log-out-outline"
               size={22}
-              color="#e38532ff"
+              color="#e38532"
               style={{ marginRight: 15 }}
             />
-            <Text style={{ fontSize: 16, fontWeight: "bold", lineHeight: 22 }}>
+            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
               Cerrar Sesión
             </Text>
           </View>

@@ -22,7 +22,7 @@ export const WorkerDrawer = () => {
         }}
       />
       <Drawer.Screen 
-        name="Profile" 
+        name="Perfil" 
         component={ProfileScreen} 
         options= {{
           drawerIcon: () => <Ionicons name="person-circle-outline" size={22} color="#e38532ff" />

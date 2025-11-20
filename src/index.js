@@ -7,13 +7,11 @@ import { GlobalSnackbar } from './shared/ui';
 
 export default function App() {
   return (
-    <StrictMode>
       <Provider store={config}>
         <AppTheme>
           <AppRoutes />
           <GlobalSnackbar /> 
         </AppTheme>
       </Provider>
-    </StrictMode>
   );
 };

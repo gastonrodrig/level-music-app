@@ -18,6 +18,8 @@ export const useUsersStore = () => {
   const findUserByEmail = async (email) => {
     try {
       const { data } = await userApi.get(`find/${email}`);
+      console.log('Respuesta completa de la API:', data);
+      console.log('Rol desde API:', data?.role);
       if (!data) {
         return { ok: false, data: null };
       }
