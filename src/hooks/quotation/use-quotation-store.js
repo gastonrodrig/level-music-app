@@ -7,6 +7,7 @@ import {
   setRowsPerPageQuotation,
   refreshQuotations,
   showSnackbar,
+  setWorkerActivities,
 } from '../../store';
 import { createQuotationModel, updateQuotationModel, evaluateQuotationModel } from '../../shared/models/quotation';
 import { useState } from 'react';
@@ -150,6 +151,21 @@ export const useQuotationStore = () => {
     }
   }
 
+  const startLoadingActivitiesByWorkerId = async (workerId) => {
+    dispatch(setLoadingQuotation(true));
+    try {
+      const { data } = await eventApi.get(`${workerId}/events`, getAuthConfig(token));
+      dispatch(setWorkerActivities(data));
+      return true;
+    } catch (error) {
+      const message = error.response?.data?.message;
+      openSnackbar(message ?? "Ocurrió un error al cargar las actividades del trabajador.");
+      return false;
+    } finally {
+      dispatch(setLoadingQuotation(false));
+    }
+  };
+
   const setSelectedQuotation = (quotation) => {
     dispatch(selectedQuotation({ ...quotation }));
   };
@@ -189,5 +205,6 @@ export const useQuotationStore = () => {
     startUpdateQuotation,
     startEvaluateQuotation,
     startTimeUpdateQuotationAdmin,
+    startLoadingActivitiesByWorkerId,
   };
 };

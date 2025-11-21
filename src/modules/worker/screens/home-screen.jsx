@@ -1,78 +1,57 @@
-import React, { useMemo, useState } from "react";
+import React, { use, useEffect, useMemo, useState } from "react";
 import { View, ScrollView, TouchableOpacity } from "react-native";
 import { Text } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { formatDate } from "../../../shared/utils";
+import { useQuotationStore, useWorkerStore , useAuthStore } from "../../../hooks";
+
 
 export const HomeScreen = () => {
-  const events = [
-    {
-      id: "1",
-      title: "Listening Party de Rosalia",
-      type: "Concierto",
-      status: "Cerrado",
-      date: "2025-11-05T00:00:00.000Z",
-      clientName: "Gastón Rodriguez",
-      location: "Dirección equis",
-      amount: 1000,
-      currency: "S/",
-    },
-    {
-      id: "2",
-      title: "Boda de Andrea y Carlos",
-      type: "Matrimonio",
-      status: "Confirmado",
-      date: "2025-11-15T00:00:00.000Z",
-      clientName: "Andrea Gonzales",
-      location: "Hacienda Los Laureles",
-      amount: 2500,
-      currency: "S/",
-    },
-    {
-      id: "3",
-      title: "Cumpleaños de Mateo",
-      type: "Cumpleaños",
-      status: "Pendiente",
-      date: "2025-12-01T00:00:00.000Z",
-      clientName: "Carlos López",
-      location: "Casa de campo",
-      amount: 1200,
-      currency: "S/",
-    },
-    {
-      id: "4",
-      title: "Conferencia Tech Fest",
-      type: "Conferencia",
-      status: "Confirmado",
-      date: "2025-12-10T00:00:00.000Z",
-      clientName: "Empresa X",
-      location: "Centro de Convenciones",
-      amount: 3000,
-      currency: "S/",
-    },
-    {
-      id: "5",
-      title: "Evento Corporativo Fin de Año",
-      type: "Corporativo",
-      status: "Pendiente",
-      date: "2025-12-20T00:00:00.000Z",
-      clientName: "Empresa Y",
-      location: "Hotel Miraflores",
-      amount: 4500,
-      currency: "S/",
-    },
-    {
-      id: "6",
-      title: "Show acústico",
-      type: "Concierto",
-      status: "Cerrado",
-      date: "2026-01-10T00:00:00.000Z",
-      clientName: "Lucía Pérez",
-      location: "Bar La Esquina",
-      amount: 800,
-      currency: "S/",
-    },
-  ];
+  const {
+    quotations,
+    
+    total,
+    loading,
+    searchTerm,
+    rowsPerPage,
+    orderBy,
+    order,
+    startLoadingActivitiesByWorkerId,
+  } = useQuotationStore();
+  const {
+    selected,
+    setSelectedWorker,
+    startLoadingWorkerByAuthId,
+  } = useWorkerStore();
+ const { _id } = useAuthStore();
+  const events = useMemo(() => {
+    // Validación de seguridad
+    if (!quotations || !Array.isArray(quotations)) return [];
+
+    return quotations.map((item) => {
+      // 1. CALCULAR MONTO TOTAL: Sumamos el 'price' de todas las subtareas de este evento
+      // En tu imagen el price es 123. Si hubiera otra tarea de 100, saldría 223.
+      const totalEarnings = item.subtasks?.reduce((acc, sub) => acc + (Number(sub.price) || 0), 0) || 0;
+
+      // 2. OBTENER DATOS DE LA PRIMERA SUBTAREA (Para estado y tipo de trabajo)
+      const firstSubtask = item.subtasks?.[0];
+      const mainStatus = firstSubtask?.status || "Pendiente"; // Ej: "Pendiente"
+      const jobRole = firstSubtask?.worker_type_name || "Evento"; // Ej: "Transportista"
+
+      return {
+        id: item._id,                 // ID único del evento (Mongo)
+        title: item.name,             // Ej: "No me borren este evento gracias"
+        type: jobRole,                // Ej: "Transportista" (lo sacamos de la subtarea)
+        status: mainStatus,           // Ej: "Pendiente"
+        date: item.event_date,        // Ej: "2025-11-30T05:00..."
+        clientName: "Cliente",        // ⚠️ Dato no visible en la imagen (puedes dejarlo fijo o pedir al backend que lo agregue)
+        location: item.exact_address || "Sin dirección", // Ej: "adsadsads"
+        amount: totalEarnings,        // Ej: 123
+        currency: "S/",               // Moneda fija
+      };
+    });
+  }, [quotations]);
+  
 
   // Estados UI
   const [selectedStatus, setSelectedStatus] = useState("Todos los estados");
@@ -86,6 +65,14 @@ export const HomeScreen = () => {
     "Pendiente",
     "Cerrado",
   ];
+  useEffect(() => {
+    startLoadingWorkerByAuthId(_id);
+    startLoadingActivitiesByWorkerId(selected._id);
+    console.log("Auth ID del trabajador:", _id);
+    console.log("cotizaciones seleccionado:", quotations);
+  }, [_id]);
+  
+  
 
   // Filtro por estado
   const filteredEvents = useMemo(() => {

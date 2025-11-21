@@ -21,6 +21,10 @@ export const quotationSlice = createSlice({
       state.currentPage = page;
       state.loading = false;
     },
+
+    setWorkerActivities: (state, action) => {
+      state.quotations = action.payload;
+   },
     // Selecciona una cotización
     selectedQuotation: (state, action) => {
       state.selected = action.payload;
@@ -47,6 +51,8 @@ export const {
   setPageQuotation,
   setRowsPerPageQuotation,
   listAllQuotations,
+  setWorkerActivities,
+  
 } = quotationSlice.actions;
 
 export default quotationSlice.reducer;
