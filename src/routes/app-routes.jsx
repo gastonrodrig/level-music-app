@@ -6,9 +6,7 @@ import {
   LoginScreen,
   ChangePasswordScreen,
 } from "../modules/auth/screens";
-import {
-  LoadingScreen
-} from '../shared/ui'
+import { LoadingScreen } from "../shared/ui";
 import { useCheckAuth } from "../hooks";
 import { WorkerDrawer } from "../modules/worker/router/drawer";
 
@@ -21,9 +19,6 @@ export const AppRoutes = () => {
 
   useCheckAuth();
 
-  console.log(status);
-
-  // Mostrar pantalla de carga si el estado es "checking"
   if (status === "checking") {
     return <LoadingScreen />;
   }
