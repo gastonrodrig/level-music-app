@@ -14,3 +14,4 @@ export const getAuthConfigWithParams = (token, params = {}) => ({
   },
   params,
 });
+

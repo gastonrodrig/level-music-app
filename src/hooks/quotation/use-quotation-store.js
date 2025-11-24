@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { eventApi } from '../../api';
+import { eventApi,taskApi } from '../../api';
 import {
   selectedQuotation,
   setLoadingQuotation,
@@ -11,6 +11,7 @@ import {
 } from '../../store';
 import { createQuotationModel, updateQuotationModel, evaluateQuotationModel } from '../../shared/models/quotation';
 import { useState } from 'react';
+import { Platform } from 'react-native';
 import { getAuthConfig, getAuthConfigWithParams } from '../../shared/utils';
 
 export const useQuotationStore = () => {
@@ -166,6 +167,66 @@ export const useQuotationStore = () => {
     }
   };
 
+  const startUpdateSubtask = async (subtaskId, updateData, files = []) => {
+    dispatch(setLoadingQuotation(true));
+    try {
+      const formData = new FormData();
+      
+      // 1. Campos de Texto
+      if (updateData.status) formData.append('status', updateData.status);
+      if (updateData.notas !== undefined) formData.append('notas', updateData.notas);
+      if (updateData.worker_id) formData.append('worker_id', updateData.worker_id);
+
+      // 2. Archivos (CORRECCIÓN CLAVE)
+      if (files && files.length > 0) {
+        files.forEach((file, index) => {
+          // Asegurar extensión
+          const uri = file.uri;
+          const name = file.name || `evidence_${index}.jpg`;
+          const match = /\.(\w+)$/.exec(name);
+          const ext = match ? match[1] : 'jpg';
+
+          // Corrección para Android: URI debe empezar con file://
+          const fileToUpload = {
+            uri: Platform.OS === 'android' ? uri : uri.replace('file://', ''),
+            type: `image/${ext === 'png' ? 'png' : 'jpeg'}`, 
+            name: name,
+          };
+
+          // 🔥 CORRECCIÓN DEFINITIVA:
+          // Debe llamarse 'evidences' porque así lo pusiste en tu Controller NestJS
+          formData.append('evidences', fileToUpload);
+        });
+      }
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data', 
+        }
+      };
+
+      console.log("Enviando PATCH a subtask:", subtaskId);
+
+      const { data } = await taskApi.patch(
+        `/${subtaskId}`,
+        formData,
+        config
+      );
+
+      openSnackbar('Actividad actualizada exitosamente');
+      return data;
+
+    } catch (error) {
+      console.error("Error API:", error.response?.data || error.message);
+      const message = error.response?.data?.message;
+      openSnackbar(message ?? 'Error al actualizar la actividad');
+      return null;
+    } finally {
+      dispatch(setLoadingQuotation(false));
+    }
+  };
+
   const setSelectedQuotation = (quotation) => {
     dispatch(selectedQuotation({ ...quotation }));
   };
@@ -206,5 +267,6 @@ export const useQuotationStore = () => {
     startEvaluateQuotation,
     startTimeUpdateQuotationAdmin,
     startLoadingActivitiesByWorkerId,
+    startUpdateSubtask,
   };
 };

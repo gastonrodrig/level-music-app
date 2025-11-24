@@ -1,13 +1,33 @@
-import React from "react";
-import { ScrollView, View } from "react-native";
+import React, { use, useEffect,useState } from "react";
+import { ScrollView, View, TouchableOpacity } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
 import { Text } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { formatDate } from "../../../shared/utils";
+import { EventDrawer } from "../router/drawer";
 
-export const EventDetailsScreen = ({ route }) => {
+export const EventDetailsScreen = ({ route, navigation }) => {
   const { eventData } = route.params;
+  const [drawerVisible, setDrawerVisible] = useState(false);
+
+  useEffect(() => {
+    // Configura el headerRight con la función para abrir el drawer
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => setDrawerVisible(true)}>
+          <Ionicons 
+            name="document-text-outline" 
+            size={22} 
+            color="#333" 
+            style={{ marginRight: 16 }}
+          />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   return (
+    <>
     <ScrollView
       style={{ flex: 1, backgroundColor: "#f5f5f5" }}
       contentContainerStyle={{ padding: 18, paddingBottom: 40 }}
@@ -22,32 +42,12 @@ export const EventDetailsScreen = ({ route }) => {
             borderWidth: 1,
             borderColor: "#e6e6e6",
             elevation: 1,
+            marginTop: 6,
           }}
         >
           <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 8 }}>
-            <Text style={{ fontSize: 13, color: "#999", letterSpacing: 0.3 }}>
-              {eventData.id}
-            </Text>
-            <View
-              style={{
-                backgroundColor: eventData.status === "Confirmado" ? "#d5f5dd" : "#fff4e0",
-                paddingHorizontal: 12,
-                paddingVertical: 4,
-                borderRadius: 14,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: "600",
-                  color: eventData.status === "Confirmado" ? "#0a7d2c" : "#d86a20",
-                }}
-              >
-                {eventData.status}
-              </Text>
-            </View>
-          </View>
-
+            
+            <View style={{ marginBottom: 12 }}>      
           <Text
             style={{
               fontSize: 18,
@@ -62,6 +62,28 @@ export const EventDetailsScreen = ({ route }) => {
           <Text style={{ fontSize: 14, color: "#d86a20", fontWeight: "500" }}>
             {eventData.type}
           </Text>
+         </View>
+            <View
+              style={{
+                backgroundColor: eventData.status === "Confirmado" ? "#d5f5dd" : "#fff4e0",
+                paddingHorizontal: 12,
+                paddingVertical: 4,
+                borderRadius: 14,
+                height:30,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontWeight: "600",
+                  color: eventData.status === "Confirmado" ? "#0a7d2c" : "#d86a20",
+                }}
+              >
+                {eventData.status}
+              </Text>
+            </View>
+          </View>
+          
         </View>
 
         {/* INFORMACIÓN DEL CLIENTE */}
@@ -188,5 +210,12 @@ export const EventDetailsScreen = ({ route }) => {
           </Text>
         </View>
       </ScrollView>
+      <EventDrawer
+        visible={drawerVisible}
+        onClose={() => setDrawerVisible(false)}
+        eventData={eventData}
+        navigation={navigation}
+      />
+      </>
   );
 };

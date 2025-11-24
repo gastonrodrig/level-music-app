@@ -21,23 +21,34 @@ export const HomeScreen = () => {
 
   useEffect(() => {
     if (selected?._id) startLoadingActivitiesByWorkerId(selected._id);
+    
   }, [selected]);
 
   const events = useMemo(() => {
     if (!Array.isArray(quotations)) return [];
+
     return quotations.map((item) => {
+      // Calculos existentes...
       const totalEarnings = item.subtasks?.reduce((acc, sub) => acc + (Number(sub.price) || 0), 0) || 0;
       const firstSubtask = item.subtasks?.[0];
+
       return {
+        // --- Campos para la UI (Tarjeta) ---
         id: item._id,
         title: item.name,
         type: firstSubtask?.worker_type_name || "Evento",
         status: firstSubtask?.status || "Pendiente",
         date: item.event_date,
-        clientName: "Cliente",
+        clientName: "Cliente", // Ojo: Aquí estás hardcodeando "Cliente", deberías sacarlo de item si existe
         location: item.exact_address || "Sin dirección",
         amount: totalEarnings,
         currency: "S/",
+        
+        subtasks: item.subtasks, 
+        email: item.email, 
+        phone: item.phone,
+        description: item.description,
+        event_code: item.event_code // Para el título del Drawer
       };
     });
   }, [quotations]);
