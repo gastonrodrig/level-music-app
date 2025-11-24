@@ -21,7 +21,10 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.levelmusic.app",
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -34,6 +37,11 @@
           "cameraPermission": "La aplicación necesita acceso a la cámara para tomar fotos de las actividades."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "cb1e4032-d0ae-427f-8392-78fa5136f107"
+      }
+    }
   }
 }

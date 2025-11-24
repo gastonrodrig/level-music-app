@@ -1,7 +1,6 @@
-import { Platform } from 'react-native';
-import { ANDROID_BASE_URL, IOS_BASE_URL } from "@env";
+import { Platform } from "react-native";
 
 export const baseURL = Platform.select({
-  android: ANDROID_BASE_URL,
-  ios: IOS_BASE_URL,
+  android: process.env.ANDROID_BASE_URL,
+  ios: process.env.IOS_BASE_URL,
 });
