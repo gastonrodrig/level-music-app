@@ -24,5 +24,8 @@ jobs:
       - name: Install EAS CLI (latest)
         run: npm i -g eas-cli@latest
 
+      - name: Set EAS token
+        run: echo "EAS_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
+
       - name: Build Android
-        run: eas build --platform android --profile production --non-interactive --token ${{ secrets.EXPO_TOKEN }}
+        run: eas build --platform android --profile production --non-interactive
