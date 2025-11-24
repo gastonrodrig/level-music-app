@@ -21,9 +21,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install EAS CLI
-        run: npm install -g eas-cli
+      - name: Install EAS CLI (latest)
+        run: npm install -g eas-cli@latest
+
+      - name: Validate token
+        run: eas whoami --token ${{ secrets.EXPO_TOKEN }}
 
       - name: Build Android
         run: eas build --platform android --profile production --non-interactive --token ${{ secrets.EXPO_TOKEN }}
-
