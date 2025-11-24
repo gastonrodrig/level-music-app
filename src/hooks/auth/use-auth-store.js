@@ -79,6 +79,7 @@ export const useAuthStore = () => {
         updatedAt: data.updated_at,
         createdAt: data.created_at,
         workerTypeName: data.worker_type_name,
+        workerId: data.worker_id,
         isExtraDataCompleted: data.is_extra_data_completed
       }));
       return !needsPassword;
@@ -92,7 +93,6 @@ export const useAuthStore = () => {
       return false;
     }
   };
-
 
   const onLogout = async () => {
     await signOut(FirebaseAuth);

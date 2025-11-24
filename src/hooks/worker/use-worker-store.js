@@ -114,23 +114,7 @@ export const useWorkerStore = () => {
       dispatch(setLoadingWorker(false));
     }
   }
-
-  const startLoadingWorkerByAuthId = async (authId) => {
-    dispatch(setLoadingWorker(true));
-    try {
-      const { data } = await workerApi.get(`/by-auth-id/${authId}`, getAuthConfig(token));
-      
-      dispatch(selectedWorker(data));
-      return true;
-    } catch (error) {
-      const message = error.response?.data?.message;
-      openSnackbar(message ?? "Ocurrió un error al cargar el trabajador.");
-      return false;
-    } finally {
-      dispatch(setLoadingWorker(false));
-    }
-  };
-
+  
   const setSelectedWorker = (worker) => {
     dispatch(selectedWorker({ ...worker }));
   };
@@ -168,6 +152,5 @@ export const useWorkerStore = () => {
     startLoadingWorkerPaginated,
     startUpdateWorker,
     setSelectedWorker,
-    startLoadingWorkerByAuthId,
   };
 };

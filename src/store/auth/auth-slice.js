@@ -21,7 +21,8 @@ export const authSlice = createSlice({
     token: null,
     updatedAt: null,
     createdAt: null,
-    workerTypeName: null
+    workerTypeName: null,
+    workerId: null,
   },
   reducers: {
     login: (state, { payload }) => {
@@ -46,6 +47,7 @@ export const authSlice = createSlice({
       state.updatedAt = payload.updatedAt;
       state.createdAt = payload.createdAt;
       state.workerTypeName = payload.workerTypeName;
+      state.workerId = payload.workerId;
       state.status = payload.needsPasswordChange ? "first-login-password" : "authenticated";
     },
     logout: (state) => {
@@ -66,6 +68,7 @@ export const authSlice = createSlice({
       state.updatedAt = null;
       state.createdAt = null;
       state.workerTypeName = null;
+      state.workerId = null;
     },
     checkingCredentials: (state) => {
       state.status = 'checking';
