@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   eas-build:
@@ -25,8 +24,8 @@ jobs:
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
-      - name: Login to Expo
-        run: eas login --token ${{ secrets.EXPO_TOKEN }}
+      - name: Verify Expo credentials
+        run: eas whoami --token ${{ secrets.EXPO_TOKEN }}
 
-      - name: Trigger Android Build
-        run: eas build --platform android --profile production --non-interactive
+      - name: Build Android (Production)
+        run: eas build --platform android --profile production --non-interactive --token ${{ secrets.EXPO_TOKEN }}
