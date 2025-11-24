@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
 
       - name: Setup Node
@@ -22,10 +22,7 @@ jobs:
         run: npm install
 
       - name: Install EAS CLI (latest)
-        run: npm install -g eas-cli@latest
-
-      - name: Validate token
-        run: eas login ${{ secrets.EXPO_TOKEN }}
+        run: npm i -g eas-cli@latest
 
       - name: Build Android
         run: eas build --platform android --profile production --non-interactive --token ${{ secrets.EXPO_TOKEN }}
